@@ -1,0 +1,7 @@
+# Ignore bin and obj directories
+bin/
+obj/
+log/
+.vs/
+Properties/
+../.vs/
