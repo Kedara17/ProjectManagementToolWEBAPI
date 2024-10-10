@@ -17,7 +17,7 @@ namespace DataServices.Models
         public Employee AssignedEmployee { get; set; }
         public ICollection<NewLeadEnquiryTechnology> NewLeadEnquiryTechnology { get; set; }
         public ICollection<NewLeadEnquiryFollowup> NewLeadEnquiryFollowup { get; set; }
-
+        public ICollection<NewLeadEnquiryDocuments> NewLeadEnquiryDocuments { get; set; }
     }
 
     public class NewLeadEnquiryDTO : AuditData

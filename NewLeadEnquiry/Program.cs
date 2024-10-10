@@ -40,6 +40,8 @@ builder.Services.AddScoped<IRepository<NewLeadEnquiryTechnology>, NewLeadEnquiry
 builder.Services.AddScoped<INewLeadEnquiryTechnologyService, NewLeadEnquiryTechnologyService>();
 builder.Services.AddScoped<IRepository<NewLeadEnquiryFollowup>, NewLeadEnquiryFollowupRepository>();
 builder.Services.AddScoped<INewLeadEnquiryFollowupService, NewLeadEnquiryFollowupService>();
+builder.Services.AddScoped<IRepository<NewLeadEnquiryDocuments>, NewLeadEnquiryDocumentsRepository>();
+builder.Services.AddScoped<INewLeadEnquiryDocumentsService, NewLeadEnquiryDocumentsService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
