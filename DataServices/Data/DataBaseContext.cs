@@ -39,6 +39,7 @@ namespace DataServices.Data
         public DbSet<POCTeam> TblPOCTeam { get; set; }
         public DbSet<POCTechnology> TblPOCTechnology { get; set; }
         public DbSet<NewLeadEnquiry> TblNewLeadEnquiry { get; set; }
+        public DbSet<NewLeadEnquiryTechnology> TblNewLeadEnquiryTechnology { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -243,6 +244,16 @@ namespace DataServices.Data
                 .WithMany(nle => nle.NewLeadEnquiry)
                 .HasForeignKey(nle => nle.AssignTo);
 
+            //-------------NewLeadEnquiryTechnology table---------------------------
+            modelBuilder.Entity<NewLeadEnquiryTechnology>()
+               .HasOne(t => t.Technology)
+               .WithMany(t => t.NewLeadEnquiryTechnology)
+               .HasForeignKey(nlt => nlt.TechnologyID);
+
+            modelBuilder.Entity<NewLeadEnquiryTechnology>()
+              .HasOne(t => t.NewLeadEnquiry)
+              .WithMany(t => t.NewLeadEnquiryTechnology)
+              .HasForeignKey(nlt => nlt.NewLeadEnquiryID);
         }
 
     }

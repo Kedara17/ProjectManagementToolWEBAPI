@@ -15,6 +15,7 @@ namespace DataServices.Models
         public Employee Employee { get; set; }
         [ForeignKey("AssignTo")]
         public Employee AssignedEmployee { get; set; }
+        public ICollection<NewLeadEnquiryTechnology> NewLeadEnquiryTechnology { get; set; }
     }
 
     public class NewLeadEnquiryDTO : AuditData
