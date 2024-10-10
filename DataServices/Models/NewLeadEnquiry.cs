@@ -11,32 +11,22 @@ namespace DataServices.Models
 {
     public class NewLeadEnquiry : NewLeadEnquiryDTO
     {
-        [Required]
-        [StringLength(50)]
-        public string? CompanyName { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string? CompanyRepresentative { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string? RepresentativeDesignation { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string? Requirement { get; set; }
-        public DateTime? EnquiryDate { get; set; }
-        public string? EmployeeID { get; set; }
-        public string? Status { get; set; }
-        public string? Comments { get; set; }
-        public new Employee? AssignTo { get; set; }
-        public new Employee? Employee { get; set; }
-
+        [ForeignKey("EmployeeID")]
+        public Employee Employee { get; set; }
+        [ForeignKey("AssignTo")]
+        public Employee AssignedEmployee { get; set; }
     }
 
     public class NewLeadEnquiryDTO : AuditData
     {
-        public string? Employee { get; set; }
+        public string? EmployeeID { get; set; }
         public string? AssignTo { get; set; }
-        
-
+        public string? CompanyName { get; set; }
+        public string? CompanyRepresentative { get; set; }
+        public string? RepresentativeDesignation { get; set; }
+        public string? Requirement { get; set; }
+        public DateTime? EnquiryDate { get; set; }
+        public string? Status { get; set; }
+        public string? Comments { get; set; }
     }
 }

@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoleApi", "RoleApi\RoleApi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POCAPI", "POCAPI\POCAPI.csproj", "{14C26460-73BB-4160-A0DD-F912A8ED8180}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLeadEnquiry", "NewLeadEnquiry\NewLeadEnquiry.csproj", "{C970AF04-14F2-4F87-B198-65764AF78932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLeadApi", "NewLeadEnquiry\NewLeadApi.csproj", "{C970AF04-14F2-4F87-B198-65764AF78932}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
