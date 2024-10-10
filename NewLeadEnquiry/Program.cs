@@ -36,6 +36,8 @@ builder.Services.AddDbContext<DataBaseContext>(options =>
 
 builder.Services.AddScoped<IRepository<NewLeadEnquiry>, NewLeadEnquiryRepository>();
 builder.Services.AddScoped<INewLeadEnquiryService, NewLeadEnquiryService>();
+builder.Services.AddScoped<IRepository<NewLeadEnquiryTechnology>, NewLeadEnquiryTechnologyRepository>();
+builder.Services.AddScoped<INewLeadEnquiryTechnologyService, NewLeadEnquiryTechnologyService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

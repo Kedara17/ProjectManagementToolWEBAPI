@@ -18,6 +18,8 @@ namespace DataServices.Models
         public ICollection<EmployeeTechnology> EmployeeTechnology { get; set; }
         public ICollection<SOWRequirementTechnology> SOWRequirementTechnology { get; set; }
         public ICollection<POCTechnology> POCTechnology { get; set; }
+        public ICollection<NewLeadEnquiryTechnology> NewLeadEnquiryTechnology { get; set; }
+
 
         [NotMapped] // Add this attribute to ignore in EF Core
         [JsonIgnore] // Add this attribute to ignore during JSON deserialization
