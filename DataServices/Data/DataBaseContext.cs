@@ -41,7 +41,7 @@ namespace DataServices.Data
         public DbSet<NewLeadEnquiry> TblNewLeadEnquiry { get; set; }
         public DbSet<NewLeadEnquiryTechnology> TblNewLeadEnquiryTechnology { get; set; }
         public DbSet<NewLeadEnquiryFollowup> TblNewLeadEnquireFollowup { get; set; }
-
+        public DbSet<NewLeadEnquiryDocuments> TblNewLeadEnquiryDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -266,6 +266,12 @@ namespace DataServices.Data
                 .HasOne(f => f.Employee)
                 .WithMany(f => f.NewLeadEnquiryFollowup)
                 .HasForeignKey(f => f.AssignTo);
+
+            //-------------- NewLeadEnquiryDocuments-----------------
+            modelBuilder.Entity<NewLeadEnquiryDocuments>()
+                .HasOne(f => f.NewLeadEnquiry)
+                .WithMany(f => f.NewLeadEnquiryDocuments)
+                .HasForeignKey(f => f.NewLeadEnquiryID);
         }
 
     }
