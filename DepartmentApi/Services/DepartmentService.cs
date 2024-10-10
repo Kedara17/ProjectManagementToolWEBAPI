@@ -111,6 +111,12 @@ namespace DepartmentApi.Services
             await _repository.Update(existingData); // Save changes
             return true;
         }
+
+        public async Task<DepartmentDTO> GetByName(string name)
+        {
+            return await _context.TblDepartment.FirstOrDefaultAsync(d => d.Name == name);
+        }
+
     }
 }
 
