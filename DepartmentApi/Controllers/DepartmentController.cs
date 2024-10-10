@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 
-namespace ClientApi.Controllers
+namespace DepartmentApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -24,7 +24,7 @@ namespace ClientApi.Controllers
         [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetAll()
         {
-            _logger.LogInformation("Fetching all");
+            _logger.LogInformation("Fetching all departments");
             var data = await _Service.GetAll();
             if (User.IsInRole("Admin"))
             {
@@ -40,12 +40,12 @@ namespace ClientApi.Controllers
         [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
         public async Task<ActionResult<DepartmentDTO>> Get(string id)
         {
-            _logger.LogInformation("Fetching with id: {Id}", id);
+            _logger.LogInformation("Fetching department with id: {Id}", id);
             var data = await _Service.Get(id);
 
             if (data == null)
             {
-                _logger.LogWarning("with id: {Id} not found", id);
+                _logger.LogWarning("Department with id: {Id} not found", id);
                 return NotFound();
             }
 
@@ -72,11 +72,19 @@ namespace ClientApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid model state for creating");
+                _logger.LogWarning("Invalid model state for creating department");
                 return BadRequest(ModelState);
             }
 
-            _logger.LogInformation("Creating a new");
+            // Check if department name is unique
+            var existingDepartment = await _Service.GetByName(_object.Name);
+            if (existingDepartment != null)
+            {
+                _logger.LogWarning("Department with name '{Name}' already exists", _object.Name);
+                return BadRequest($"Department with name '{_object.Name}' already exists.");
+            }
+
+            _logger.LogInformation("Creating a new department");
 
             try
             {
@@ -97,14 +105,22 @@ namespace ClientApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid model state for updating ");
+                _logger.LogWarning("Invalid model state for updating department");
                 return BadRequest(ModelState);
             }
 
             if (id != _object.Id)
             {
-                _logger.LogWarning("id: {Id} does not match with the id in the request body", id);
+                _logger.LogWarning("Department id: {Id} does not match with the id in the request body", id);
                 return BadRequest("ID mismatch.");
+            }
+
+            // Check if the updated name is unique (excluding the current department)
+            var existingDepartment = await _Service.GetByName(_object.Name);
+            if (existingDepartment != null && existingDepartment.Id != _object.Id)
+            {
+                _logger.LogWarning("Department with name '{Name}' already exists", _object.Name);
+                return BadRequest($"Department with name '{_object.Name}' already exists.");
             }
 
             try
