@@ -27,6 +27,6 @@ namespace DataServices.Models
         public string? Requirement { get; set; }
         public DateTime? EnquiryDate { get; set; }
         public string? Status { get; set; }
-        public string? Comments { get; set; }
+        public string? Comments { get; set; } 
     }
 }
