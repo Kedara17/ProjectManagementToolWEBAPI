@@ -19,6 +19,8 @@ namespace DataServices.Models
     {
         [Required]
         [MaxLength(50)]
+        [MinLength(3)]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Special characters and Digits are not allowed.")]
         public string Name { get; set; }        
     }
 }
