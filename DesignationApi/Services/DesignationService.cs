@@ -2,6 +2,7 @@
 using DataServices.Models;
 using DataServices.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DesignationApi.Services
 {
@@ -9,11 +10,13 @@ namespace DesignationApi.Services
     {
         private readonly IRepository<Designation> _repository;
         private readonly DataBaseContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DesignationService(IRepository<Designation> repository, DataBaseContext context)
+        public DesignationService(IRepository<Designation> repository, DataBaseContext context, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<DesignationDTO>> GetAll()
@@ -60,14 +63,13 @@ namespace DesignationApi.Services
 
         public async Task<DesignationDTO> Add(DesignationDTO _object)
         {
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
             var designation = new Designation
             {
                 Name = _object.Name,
                 IsActive = true,
-                CreatedBy = "SYSTEM",
-                CreatedDate = DateTime.Now,
-                UpdatedBy = _object.UpdatedBy,
-                UpdatedDate = _object.UpdatedDate
+                CreatedBy = userName,
+                CreatedDate = DateTime.Now
             };
 
             _context.TblDesignation.Add(designation);
@@ -79,6 +81,7 @@ namespace DesignationApi.Services
 
         public async Task<DesignationDTO> Update(DesignationDTO _object)
         {
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
             var designation = await _context.TblDesignation.FindAsync(_object.Id);
 
             if (designation == null)
@@ -86,8 +89,10 @@ namespace DesignationApi.Services
 
             designation.Name = _object.Name;
             designation.IsActive = _object.IsActive;
-            designation.UpdatedBy = _object.UpdatedBy;
-            designation.UpdatedDate = _object.UpdatedDate;
+            designation.CreatedBy = _object.CreatedBy;
+            designation.CreatedDate = _object.CreatedDate;
+            designation.UpdatedBy = userName;
+            designation.UpdatedDate = DateTime.Now;
 
             _context.Entry(designation).State = EntityState.Modified;
             await _context.SaveChangesAsync();

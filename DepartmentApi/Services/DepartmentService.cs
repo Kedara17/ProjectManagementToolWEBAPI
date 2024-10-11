@@ -3,6 +3,7 @@ using DataServices.Models;
 using DataServices.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DepartmentApi.Services
 {
@@ -10,11 +11,13 @@ namespace DepartmentApi.Services
     {
         private readonly IRepository<Department> _repository;
         private readonly DataBaseContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DepartmentService(IRepository<Department> repository, DataBaseContext context)
+        public DepartmentService(IRepository<Department> repository, DataBaseContext context, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<DepartmentDTO>> GetAll()
@@ -62,14 +65,13 @@ namespace DepartmentApi.Services
 
         public async Task<DepartmentDTO> Add(DepartmentDTO _object)
         {
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
             var department = new Department
             {
                 Name = _object.Name,
                 IsActive = true,
-                CreatedBy = "SYSTEM",
-                CreatedDate = DateTime.Now,
-                UpdatedBy = _object.UpdatedBy,
-                UpdatedDate = _object.UpdatedDate
+                CreatedBy = userName,
+                CreatedDate = DateTime.Now
             };
 
             _context.TblDepartment.Add(department);
@@ -81,6 +83,7 @@ namespace DepartmentApi.Services
 
         public async Task<DepartmentDTO> Update(DepartmentDTO _object)
         {
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
             var department = await _context.TblDepartment.FindAsync(_object.Id);
 
             if (department == null)
@@ -88,8 +91,10 @@ namespace DepartmentApi.Services
 
             department.Name = _object.Name;
             department.IsActive = _object.IsActive;
-            department.UpdatedBy = _object.UpdatedBy;
-            department.UpdatedDate = _object.UpdatedDate;
+            department.CreatedBy = _object.CreatedBy;
+            department.CreatedDate = _object.CreatedDate;
+            department.UpdatedBy = userName;
+            department.UpdatedDate = DateTime.Now;
 
             _context.Entry(department).State = EntityState.Modified;
             await _context.SaveChangesAsync();
