@@ -16,7 +16,7 @@ namespace DataServices.Data
 
         public DbSet<Employee> TblEmployee { get; set; }
         public DbSet<Role> TblRole { get; set; }
-        public DbSet<Blogs> TblBlogs { get; set; }        
+        public DbSet<Blogs> TblBlogs { get; set; }
         public DbSet<Designation> TblDesignation { get; set; }
         public DbSet<Technology> TblTechnology { get; set; }
         public DbSet<Project> TblProject { get; set; }
@@ -41,11 +41,12 @@ namespace DataServices.Data
         public DbSet<NewLeadEnquiry> TblNewLeadEnquiry { get; set; }
         public DbSet<NewLeadEnquiryTechnology> TblNewLeadEnquiryTechnology { get; set; }
         public DbSet<NewLeadEnquiryFollowup> TblNewLeadEnquireFollowup { get; set; }
+        public DbSet<BestPerformers> TblBestPerformers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+
             //----------3rd table_Employee------------------------------------
             modelBuilder.Entity<Employee>()
             .HasOne(e => e.Designation)
@@ -65,7 +66,7 @@ namespace DataServices.Data
             modelBuilder.Entity<Employee>()
             .HasOne(e => e.ReportingToEmployee)
             .WithMany(d => d.Subordinates)
-            .HasForeignKey(e => e.ReportingTo);    
+            .HasForeignKey(e => e.ReportingTo);
 
 
             //----------4th table Technology------------------------------------
@@ -266,6 +267,24 @@ namespace DataServices.Data
                 .HasOne(f => f.Employee)
                 .WithMany(f => f.NewLeadEnquiryFollowup)
                 .HasForeignKey(f => f.AssignTo);
+
+            //BestPerformers
+            modelBuilder.Entity<BestPerformers>()
+                 .HasOne(pt => pt.Employee)  // Relationship with Employee
+                 .WithMany(c => c.BestPerformers)
+                 .HasForeignKey(pt => pt.EmployeeID);
+
+            modelBuilder.Entity<BestPerformers>()
+                 .HasOne(pt => pt.Client)  // Relationship with Client
+                 .WithMany(c => c.BestPerformers)
+                 .HasForeignKey(pt => pt.ClientID)
+                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<BestPerformers>()
+                 .HasOne(pt => pt.Project)  // Relationship with Project
+                 .WithMany(c => c.BestPerformers)
+                 .HasForeignKey(pt => pt.ProjectID)
+                 .OnDelete(DeleteBehavior.SetNull);
         }
 
     }
