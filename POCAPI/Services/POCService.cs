@@ -70,6 +70,13 @@ namespace POCAPI.Services
 
         public async Task<POCDTO> Add(POCDTO _object)
         {
+            // Check if the POC already exists
+            var existingPOC = await _context.TblPOC
+                .FirstOrDefaultAsync(t => t.Title == _object.Title);
+
+            if (existingPOC != null)
+                throw new ArgumentException("A POC with the same name already exists.");
+
             var client = await _context.TblClient
                 .FirstOrDefaultAsync(d => d.Name == _object.Client);
 
@@ -100,6 +107,13 @@ namespace POCAPI.Services
 
         public async Task<POCDTO> Update(POCDTO _object)
         {
+            // Check if the POC already exists
+            var existingPOC = await _context.TblPOC
+                .FirstOrDefaultAsync(t => t.Title == _object.Title);
+
+            if (existingPOC != null)
+                throw new ArgumentException("A POC with the same name already exists.");
+
             var poc = await _context.TblPOC.FindAsync(_object.Id);
 
             if (poc == null)

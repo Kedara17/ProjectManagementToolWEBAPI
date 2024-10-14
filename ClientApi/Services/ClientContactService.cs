@@ -68,6 +68,13 @@ namespace ClientApi.Services
 
         public async Task<ClientContactDTO> Add(ClientContactDTO _object)
         {
+            // Check if the ContactValue name already exists
+            var existingContactValue = await _context.TblClientContact
+                .FirstOrDefaultAsync(t => t.ContactValue == _object.ContactValue);
+
+            if (existingContactValue != null)
+                throw new ArgumentException("A ContactValue with the same name already exists.");
+
             var client = await _context.TblClient
                 .FirstOrDefaultAsync(c => c.Name == _object.Client);
 
@@ -96,6 +103,13 @@ namespace ClientApi.Services
 
         public async Task<ClientContactDTO> Update(ClientContactDTO _object)
         {
+            // Check if the ContactValue name already exists
+            var existingContactValue = await _context.TblClientContact
+                .FirstOrDefaultAsync(t => t.ContactValue == _object.ContactValue);
+
+            if (existingContactValue != null)
+                throw new ArgumentException("A ContactValue with the same name already exists.");
+
             var clientContact = await _context.TblClientContact.FindAsync(_object.Id);
 
             if (clientContact == null)

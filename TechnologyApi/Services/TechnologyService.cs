@@ -65,6 +65,13 @@ namespace TechnologyApi.Services
 
         public async Task<TechnologyDTO> Add(TechnologyDTO technologyDto)
         {
+            // Check if the technology name already exists
+            var existingTechnology = await _context.TblTechnology
+                .FirstOrDefaultAsync(t => t.Name == technologyDto.Name);
+
+            if (existingTechnology != null)
+                throw new ArgumentException("A technology with the same name already exists.");
+
             var department = await _context.TblDepartment
                 .FirstOrDefaultAsync(d => d.Name == technologyDto.Department);
 
@@ -91,6 +98,12 @@ namespace TechnologyApi.Services
 
         public async Task<TechnologyDTO> Update(TechnologyDTO technologyDto)
         {
+            // Check if the technology name already exists
+            var existingTechnology = await _context.TblTechnology
+                .FirstOrDefaultAsync(t => t.Name == technologyDto.Name);
+            if (existingTechnology != null)
+                throw new ArgumentException("A technology with the same name already exists.");
+
             var technology = await _context.TblTechnology.FindAsync(technologyDto.Id);
 
             if (technology == null)

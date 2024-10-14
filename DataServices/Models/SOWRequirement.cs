@@ -1,6 +1,7 @@
 ﻿using DataServices.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,7 @@ namespace DataServices.Models
         public string? SOW { get; set; }
         public string? Designation { get; set; }
         public string[] Technology { get; set; }
+        [RegularExpression(@"^[0-9\s]+$", ErrorMessage = "Only digits are allowed.")]
         public int? TeamSize { get; set; }
 
     }
