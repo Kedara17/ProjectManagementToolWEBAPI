@@ -65,12 +65,19 @@ namespace DepartmentApi.Services
 
         public async Task<DepartmentDTO> Add(DepartmentDTO _object)
         {
-            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+            // Check if the Department name already exists
+            var existingDepartment = await _context.TblDepartment
+                .FirstOrDefaultAsync(t => t.Name == _object.Name);
+
+            if (existingDepartment != null)
+                throw new ArgumentException("A department with the same name already exists.");
+
+            var employeeName = _httpContextAccessor.HttpContext?.User?.FindFirst("EmployeeName")?.Value;
             var department = new Department
             {
                 Name = _object.Name,
                 IsActive = true,
-                CreatedBy = userName,
+                CreatedBy = employeeName,
                 CreatedDate = DateTime.Now
             };
 
@@ -83,16 +90,14 @@ namespace DepartmentApi.Services
 
         public async Task<DepartmentDTO> Update(DepartmentDTO _object)
         {
-            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst("EmployeeName")?.Value;
             var department = await _context.TblDepartment.FindAsync(_object.Id);
 
             if (department == null)
                 throw new KeyNotFoundException("Department not found");
 
             department.Name = _object.Name;
-            department.IsActive = _object.IsActive;
-            department.CreatedBy = _object.CreatedBy;
-            department.CreatedDate = _object.CreatedDate;
             department.UpdatedBy = userName;
             department.UpdatedDate = DateTime.Now;
 

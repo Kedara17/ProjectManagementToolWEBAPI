@@ -29,6 +29,10 @@ namespace DataServices.Models
     public class TechnologyDTO : AuditData
     {
         [Required(ErrorMessage = "The Name field is required.")]
+        [MinLength(3)]
+        [MaxLength(50)]
+        [StringLength(50, ErrorMessage = "The Name cannot exceed 50 characters.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Special characters and Digits are not allowed.")]
         public string Name { get; set; }
         public string? Department { get; set; }
     }

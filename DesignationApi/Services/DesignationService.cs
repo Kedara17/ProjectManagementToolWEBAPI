@@ -63,12 +63,19 @@ namespace DesignationApi.Services
 
         public async Task<DesignationDTO> Add(DesignationDTO _object)
         {
-            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+            // Check if the Designation name already exists
+            var existingDesignation = await _context.TblDesignation
+                .FirstOrDefaultAsync(t => t.Name == _object.Name);
+
+            if (existingDesignation != null)
+                throw new ArgumentException("A designation with the same name already exists.");
+
+            var employeeName = _httpContextAccessor.HttpContext?.User?.FindFirst("EmployeeName")?.Value;
             var designation = new Designation
             {
                 Name = _object.Name,
                 IsActive = true,
-                CreatedBy = userName,
+                CreatedBy = employeeName,
                 CreatedDate = DateTime.Now
             };
 
@@ -81,17 +88,21 @@ namespace DesignationApi.Services
 
         public async Task<DesignationDTO> Update(DesignationDTO _object)
         {
-            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+            // Check if the Designation name already exists
+            var existingDesignation = await _context.TblDesignation
+                .FirstOrDefaultAsync(t => t.Name == _object.Name);
+
+            if (existingDesignation != null)
+                throw new ArgumentException("A designation with the same name already exists.");
+
+            var employeeName = _httpContextAccessor.HttpContext?.User?.FindFirst("EmployeeName")?.Value;
             var designation = await _context.TblDesignation.FindAsync(_object.Id);
 
             if (designation == null)
                 throw new KeyNotFoundException("Designation not found");
 
             designation.Name = _object.Name;
-            designation.IsActive = _object.IsActive;
-            designation.CreatedBy = _object.CreatedBy;
-            designation.CreatedDate = _object.CreatedDate;
-            designation.UpdatedBy = userName;
+            designation.UpdatedBy = employeeName;
             designation.UpdatedDate = DateTime.Now;
 
             _context.Entry(designation).State = EntityState.Modified;
@@ -112,6 +123,10 @@ namespace DesignationApi.Services
             existingData.IsActive = false; // Soft delete
             await _repository.Update(existingData); // Save changes
             return true;
+        }
+        public async Task<DesignationDTO> GetByName(string name)
+        {
+            return await _context.TblDesignation.FirstOrDefaultAsync(d => d.Name == name);
         }
     }
 }
