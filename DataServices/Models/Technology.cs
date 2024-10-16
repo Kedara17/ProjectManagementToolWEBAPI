@@ -12,26 +12,34 @@ namespace DataServices.Models
 {
     public class Technology : TechnologyDTO
     {
-        [Required]
+        [ForeignKey("DepartmentId")]
         public string? DepartmentId { get; set; }
         public ICollection<ProjectTechnology> ProjectTechnology { get; set; }
         public ICollection<EmployeeTechnology> EmployeeTechnology { get; set; }
         public ICollection<SOWRequirementTechnology> SOWRequirementTechnology { get; set; }
         public ICollection<POCTechnology> POCTechnology { get; set; }
-
-        [NotMapped] // Add this attribute to ignore in EF Core
-        [JsonIgnore] // Add this attribute to ignore during JSON deserialization
-        [ForeignKey("DepartmentId")]
         public Department? Department { get; set; }
     }
     public class TechnologyDTO : AuditData
     {
-        [Required(ErrorMessage = "The Name field is required.")]
-        [MinLength(3)]
-        [MaxLength(50)]
-        [StringLength(50, ErrorMessage = "The Name cannot exceed 50 characters.")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Special characters and Digits are not allowed.")]
         public string Name { get; set; }
         public string? Department { get; set; }
+    }
+    public class TechnologyBaseDTO
+    {
+        [Required]
+        [MinLength(3)]
+        [MaxLength(50)]
+        [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Special characters and Digits are not allowed.")]
+        public string Name { get; set; }
+        public string? DepartmentId { get; set; }
+    }
+    public class TechnologyCreateDTO : TechnologyBaseDTO
+    {
+    }
+    public class TechnologyUpdateDTO : TechnologyBaseDTO
+    {
+        public string Id { get; set; }
     }
 }
