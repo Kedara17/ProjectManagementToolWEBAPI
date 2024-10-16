@@ -1,0 +1,6 @@
+@CertificationsApi_HostAddress = http://localhost:5151
+
+GET {{CertificationsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -13,7 +13,8 @@ namespace DataServices.Data
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
         }
-
+        public DbSet<SuccessStories> TblSuccessStories { get; set; }
+        public DbSet<Certifications> TblCertifications { get; set; }
         public DbSet<Employee> TblEmployee { get; set; }
         public DbSet<Role> TblRole { get; set; }
         public DbSet<Blogs> TblBlogs { get; set; }        
@@ -229,6 +230,33 @@ namespace DataServices.Data
                                    .HasOne(pt => pt.Technology)
                                    .WithMany(c => c.POCTechnology)
                                    .HasForeignKey(pt => pt.TechnologyId);
+            //----------Certifications table------------------------------------
+            modelBuilder.Entity<Certifications>()
+                                    .HasOne(pt => pt.Employee)
+                                    .WithMany(c => c.Certifications)
+                                    .HasForeignKey(pt => pt.EmployeeId);
+
+            //----------SuccessStories table------------------------------------
+
+            modelBuilder.Entity<SuccessStories>()
+               .HasOne(c => c.Client)
+               .WithMany(c => c.SuccessStories)
+               .HasForeignKey(c => c.ClientID);
+
+            modelBuilder.Entity<SuccessStories>()
+             .HasOne(c => c.Project)
+             .WithMany(c => c.SuccessStories)
+             .HasForeignKey(c => c.ProjectId);
+
+
+
+
+
+            modelBuilder.Entity<SuccessStories>()
+                .HasOne(c => c.Employee)
+                .WithMany(c => c.SuccessStories)
+                .HasForeignKey(c => c.AssignTo);
+
 
         }
 

@@ -40,6 +40,8 @@ namespace DataServices.Models
         public ICollection<EmployeeTechnology> Technology { get; set; }
         public ICollection<Employee> Subordinates { get; set; }
         public ICollection<POCTeam> POCTeam { get; set; }
+        public ICollection<Certifications> Certifications { get; set; }
+        public ICollection<SuccessStories> SuccessStories { get; set; }
 
     }
     public class EmployeeProfileDTO 

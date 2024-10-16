@@ -15,6 +15,8 @@ namespace DataServices.Models
         public ICollection<POC> POC { get; set; }
         [ForeignKey("SalesEmployee")]
         public Employee Employee { get; set; }
+
+        public ICollection<SuccessStories> SuccessStories { get; set; }
     }
 
     public class ClientDTO : AuditData
