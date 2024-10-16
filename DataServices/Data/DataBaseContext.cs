@@ -38,6 +38,10 @@ namespace DataServices.Data
         public DbSet<POC> TblPOC { get; set; }
         public DbSet<POCTeam> TblPOCTeam { get; set; }
         public DbSet<POCTechnology> TblPOCTechnology { get; set; }
+        public DbSet<NewLeadEnquiry> TblNewLeadEnquiry { get; set; }
+        public DbSet<NewLeadEnquiryTechnology> TblNewLeadEnquiryTechnology { get; set; }
+        public DbSet<NewLeadEnquiryFollowup> TblNewLeadEnquireFollowup { get; set; }
+        public DbSet<NewLeadEnquiryDocuments> TblNewLeadEnquiryDocuments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -230,6 +234,44 @@ namespace DataServices.Data
                                    .WithMany(c => c.POCTechnology)
                                    .HasForeignKey(pt => pt.TechnologyId);
 
+            //---------NewLeadEnquiry table---------------------------------
+            modelBuilder.Entity<NewLeadEnquiry>()
+               .HasOne(nle => nle.Employee)
+               .WithMany(nle => nle.NewLeadEnquiry)
+               .HasForeignKey(nle => nle.EmployeeID);
+
+            modelBuilder.Entity<NewLeadEnquiry>()
+                .HasOne(nle => nle.Employee)
+                .WithMany(nle => nle.NewLeadEnquiry)
+                .HasForeignKey(nle => nle.AssignTo);
+
+            //-------------NewLeadEnquiryTechnology table---------------------------
+            modelBuilder.Entity<NewLeadEnquiryTechnology>()
+               .HasOne(t => t.Technology)
+               .WithMany(t => t.NewLeadEnquiryTechnology)
+               .HasForeignKey(nlt => nlt.TechnologyID);
+
+            modelBuilder.Entity<NewLeadEnquiryTechnology>()
+              .HasOne(t => t.NewLeadEnquiry)
+              .WithMany(t => t.NewLeadEnquiryTechnology)
+              .HasForeignKey(t => t.NewLeadEnquiryID);
+
+            //--------------NewLeadEnquiryFollowup---------------------
+            modelBuilder.Entity<NewLeadEnquiryFollowup>()
+            .HasOne(f => f.NewLeadEnquiry)
+            .WithMany(f => f.NewLeadEnquiryFollowup)
+            .HasForeignKey(f => f.NewLeadEnquiryID);
+
+            modelBuilder.Entity<NewLeadEnquiryFollowup>()
+                .HasOne(f => f.Employee)
+                .WithMany(f => f.NewLeadEnquiryFollowup)
+                .HasForeignKey(f => f.AssignTo);
+
+            //-------------- NewLeadEnquiryDocuments-----------------
+            modelBuilder.Entity<NewLeadEnquiryDocuments>()
+                .HasOne(f => f.NewLeadEnquiry)
+                .WithMany(f => f.NewLeadEnquiryDocuments)
+                .HasForeignKey(f => f.NewLeadEnquiryID);
         }
 
     }

@@ -18,6 +18,7 @@ namespace DataServices.Models
         public ICollection<EmployeeTechnology> EmployeeTechnology { get; set; }
         public ICollection<SOWRequirementTechnology> SOWRequirementTechnology { get; set; }
         public ICollection<POCTechnology> POCTechnology { get; set; }
+        public ICollection<NewLeadEnquiryTechnology> NewLeadEnquiryTechnology { get; set; }
         public Department? Department { get; set; }
     }
     public class TechnologyDTO : AuditData
