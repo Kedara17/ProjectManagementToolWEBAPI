@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataServices.Models
 {
-    public class ContactType :AuditData
+    public class ContactType : ContactTypeDTO
+    {
+        public ICollection<ClientContact> ClientContact { get; set; }
+    }
+        public class ContactTypeDTO :AuditData
     {
         public string TypeName { get; set; }
         

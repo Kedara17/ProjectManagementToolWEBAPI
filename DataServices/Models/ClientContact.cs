@@ -10,8 +10,13 @@ namespace DataServices.Models
     public class ClientContact : ClientContactDTO
     {
         public string ClientId { get; set; }
+
         [ForeignKey("ClientId")]
         public Client Client { get; set; }
+
+        public string ContactTypeId { get; set; }
+        [ForeignKey("ContactTypeId")]
+        public ContactType ContactType { get; set; }
     }
     public class ClientContactDTO : AuditData
     {
@@ -19,7 +24,7 @@ namespace DataServices.Models
 
         public string? ContactValue { get; set; }
 
-        public int? ContactType { get; set; }
+        public string? ContactType { get; set; }
 
     }
 }
