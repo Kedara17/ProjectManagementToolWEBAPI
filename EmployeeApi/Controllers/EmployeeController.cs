@@ -24,7 +24,7 @@ namespace EmployeeApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAll()
         {
             _logger.LogInformation("Fetching all employees");
@@ -40,7 +40,7 @@ namespace EmployeeApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
         public async Task<ActionResult<EmployeeDTO>> Get(string id)
         {
             _logger.LogInformation("Fetching employee with id: {Id}", id);
