@@ -164,9 +164,9 @@ namespace POCAPI.Services
             if (existingPOC != null)
                 throw new ArgumentException("A POC with the same name already exists.");
 
-            var poc = await _context.TblPOC.FindAsync(pocDto.Id);
+            var pocData = await _context.TblPOC.FindAsync(pocDto.Id);
 
-            if (poc == null)
+            if (pocData == null)
                 throw new KeyNotFoundException("Poc not found");
 
             var client = await _context.TblClient
