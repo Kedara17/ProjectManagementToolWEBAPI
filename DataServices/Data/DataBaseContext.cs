@@ -120,14 +120,24 @@ namespace DataServices.Data
 
             //----------14th SOWRequirement table------------------------------------
             modelBuilder.Entity<SOWRequirement>()
-                        .HasOne(pt => pt.SOWs)
+                        .HasOne(pt => pt.SOW)
                         .WithMany(c => c.SOWRequirement)
-                        .HasForeignKey(pt => pt.SOW);
+                        .HasForeignKey(pt => pt.SOWId);
 
             modelBuilder.Entity<SOWRequirement>()
                         .HasOne(pt => pt.Designation)
                         .WithMany(c => c.SOWRequirement)
                         .HasForeignKey(pt => pt.DesignationId);
+
+            modelBuilder.Entity<SOWRequirementTechnology>()
+                        .HasOne(et => et.Technology)
+                        .WithMany(t => t.SOWRequirementTechnology)
+                        .HasForeignKey(et => et.TechnologyId);
+
+            modelBuilder.Entity<SOWRequirementTechnology>()
+            .HasOne(et => et.SOWRequirements)
+            .WithMany(t => t.Technology)
+            .HasForeignKey(et => et.SOWRequirementId);
 
             //----------15th SOWPropsedTeam table------------------------------------
             modelBuilder.Entity<SOWProposedTeam>()
