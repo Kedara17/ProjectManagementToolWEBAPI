@@ -101,6 +101,11 @@ namespace DataServices.Data
                         .WithMany(c => c.ClientContact)
                         .HasForeignKey(cc => cc.ClientId);
 
+            modelBuilder.Entity<ClientContact>()
+                .HasOne(cc => cc.ContactType)
+                .WithMany(c => c.ClientContact)
+                .HasForeignKey(cc => cc.ContactTypeId);
+
             //----------13th SOW table------------------------------------
 
             modelBuilder.Entity<SOW>()
