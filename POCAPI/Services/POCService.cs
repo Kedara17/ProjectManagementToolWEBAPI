@@ -72,6 +72,11 @@ namespace POCAPI.Services
         public async Task<POCDTO> Add(POCDTO pocDto)
         {
             var poc = new POC();
+            // Check if the POC already exists
+            var existingPOC = await _context.TblPOC
+                .FirstOrDefaultAsync(t => t.Title == pocDto.Title);
+            if (existingPOC != null)
+                throw new ArgumentException("A POC with the same name already exists.");
 
             var client = await _context.TblClient
                 .FirstOrDefaultAsync(d => d.Name == pocDto.Client);
@@ -89,8 +94,7 @@ namespace POCAPI.Services
             poc.CreatedBy = pocDto.CreatedBy;
             poc.CreatedDate = pocDto.CreatedDate;
             poc.UpdatedBy = pocDto.UpdatedBy;
-            poc.UpdatedDate = pocDto.UpdatedDate;
-            
+            poc.UpdatedDate = pocDto.UpdatedDate;       
 
             // Set the Profile property if a file is uploaded
             if (!string.IsNullOrEmpty(pocDto.Document))
@@ -152,6 +156,14 @@ namespace POCAPI.Services
 
         public async Task<POCDTO> Update(POCDTO pocDto)
         {
+            var poc = await _context.TblPOC.FindAsync(pocDto.Id);
+            // Check if the POC already exists
+            var existingPOC = await _context.TblPOC
+                .FirstOrDefaultAsync(t => t.Title == pocDto.Title);
+
+            if (existingPOC != null)
+                throw new ArgumentException("A POC with the same name already exists.");
+
             var poc = await _context.TblPOC.FindAsync(pocDto.Id);
 
             if (poc == null)

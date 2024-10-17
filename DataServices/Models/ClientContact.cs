@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,11 @@ namespace DataServices.Models
     public class ClientContactDTO : AuditData
     {
         public string Client { get; set; }
-
+        [Required(ErrorMessage = "The ContactValue field is required.")]
+        [MinLength(3)]
+        [MaxLength(50)]
+        [StringLength(50, ErrorMessage = "The ContactValue cannot exceed 50 characters.")]
+        //[RegularExpression(@"^[a-zA-Z0-9\s]+$", ErrorMessage = "Special characters and Digits are not allowed.")]
         public string? ContactValue { get; set; }
 
         public string? ContactType { get; set; }
