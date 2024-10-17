@@ -1,5 +1,6 @@
 ﻿using DataServices.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace TechnologyApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<TechnologyDTO>> Create([FromBody] TechnologyDTO techDto)
+        public async Task<ActionResult<TechnologyDTO>> Create([FromBody] TechnologyCreateDTO createDto)
         {
             if (!ModelState.IsValid)
             {
@@ -77,11 +78,19 @@ namespace TechnologyApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Check if technology name is unique
+            var existingTechnology = await _technologyService.GetByName(createDto.Name);
+            if (existingTechnology != null)
+            {
+                _logger.LogWarning("Technology with name '{Name}' already exists", createDto.Name);
+                return BadRequest($"Technology with name '{createDto.Name}' already exists.");
+            }
             _logger.LogInformation("Creating a new technology");
 
             try
             {
-                var createdTechnology = await _technologyService.Add(techDto);
+                var technologyDto = new TechnologyDTO { Name = createDto.Name, Department = createDto.DepartmentId };
+                var createdTechnology = await _technologyService.Add(technologyDto);
                 return CreatedAtAction(nameof(GetTechnology), new { id = createdTechnology.Id }, createdTechnology);
             }
             catch (KeyNotFoundException ex)
@@ -93,25 +102,32 @@ namespace TechnologyApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateTechnology(string id, [FromBody] TechnologyDTO techDto)
+        public async Task<IActionResult> UpdateTechnology(string id, [FromBody] TechnologyUpdateDTO updateDto)
         {
-            if (id != techDto.Id)
-            {
-                _logger.LogWarning("Technology id mismatch");
-                return BadRequest("Technology ID mismatch");
-            }
-
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Invalid model state for updating technology");
                 return BadRequest(ModelState);
+            }
+            if (id != updateDto.Id)
+            {
+                _logger.LogWarning("Technology id mismatch");
+                return BadRequest("Technology ID mismatch");
+            }
+            // Check if technology name is unique
+            var existingTechnology = await _technologyService.GetByName(updateDto.Name);
+            if (existingTechnology != null && existingTechnology.Id != id)
+            {
+                _logger.LogWarning("Technology with name '{Name}' already exists", updateDto.Name);
+                return BadRequest($"Technology with name '{updateDto.Name}' already exists.");
             }
 
             _logger.LogInformation("Updating technology with id: {Id}", id);
 
             try
             {
-                await _technologyService.Update(techDto);
+                var technologyDto = new TechnologyDTO { Id = id, Name = updateDto.Name, Department = updateDto.DepartmentId };
+                await _technologyService.Update(technologyDto);
             }
             catch (KeyNotFoundException ex)
             {
