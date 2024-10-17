@@ -21,7 +21,7 @@ namespace DepartmentApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetAll()
         {
             _logger.LogInformation("Fetching all departments");
@@ -37,7 +37,7 @@ namespace DepartmentApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Director, Project Manager, Team Lead, Team Member")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<DepartmentDTO>> Get(string id)
         {
             _logger.LogInformation("Fetching department with id: {Id}", id);
@@ -67,7 +67,7 @@ namespace DepartmentApi.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Director, Project Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<DepartmentDTO>> Add([FromBody] DepartmentDTO _object)
         {
             if (!ModelState.IsValid)
@@ -100,7 +100,7 @@ namespace DepartmentApi.Controllers
 
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin, Director, Project Manager, Team Lead")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(string id, [FromBody] DepartmentDTO _object)
         {
             if (!ModelState.IsValid)
