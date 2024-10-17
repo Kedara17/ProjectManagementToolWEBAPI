@@ -268,7 +268,7 @@ namespace DataServices.Data
                 .WithMany(f => f.NewLeadEnquiryFollowup)
                 .HasForeignKey(f => f.AssignTo);
 
-            //BestPerformers
+            //---------- BestPerformers table------------------------------------
             modelBuilder.Entity<BestPerformers>()
                  .HasOne(pt => pt.Employee)  // Relationship with Employee
                  .WithMany(c => c.BestPerformers)
@@ -285,6 +285,7 @@ namespace DataServices.Data
                  .WithMany(c => c.BestPerformers)
                  .HasForeignKey(pt => pt.ProjectID)
                  .OnDelete(DeleteBehavior.SetNull);
+
         }
 
     }
