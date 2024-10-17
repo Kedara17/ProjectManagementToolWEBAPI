@@ -21,7 +21,6 @@ namespace DataServices.Models
         [ForeignKey("Status")]
         public SOWStatus SOWStatus { get; set; }
         public ICollection<SOWRequirement> SOWRequirement { get; set; }
-        public ICollection<SOWRequirementTechnology> SOWRequirementTechnology { get; set; }
 
     }
     public class SOWDTO : AuditData
